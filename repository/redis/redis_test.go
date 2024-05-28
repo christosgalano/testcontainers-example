@@ -14,7 +14,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 	"gotest.tools/v3/assert"
 
-	"github.com/christosgalano/testcontainers-demo/models"
+	"github.com/christosgalano/testcontainers-demo/model"
 )
 
 func setupTestRedisRepository(ctx context.Context) (*RedisSongRepository, func(), error) {
@@ -55,7 +55,7 @@ func setupTestRedisRepository(ctx context.Context) (*RedisSongRepository, func()
 	if err != nil {
 		return nil, nil, fmt.Errorf("failed to read songs.json: %w", err)
 	}
-	var songs []models.Song
+	var songs []model.Song
 	if err := json.Unmarshal(initialSongs, &songs); err != nil {
 		return nil, nil, fmt.Errorf("failed to unmarshal songs: %w", err)
 	}
@@ -98,9 +98,9 @@ func TestRedisSongRepository_GetAll(t *testing.T) {
 		t.Fatalf("expected 3 songs, got %d", len(songs))
 	}
 
-	expectedSongs := make(map[string]models.Song)
+	expectedSongs := make(map[string]model.Song)
 	for i := 1; i <= len(songs); i++ {
-		expectedSongs[fmt.Sprintf("%d", i)] = models.Song{
+		expectedSongs[fmt.Sprintf("%d", i)] = model.Song{
 			ID:       fmt.Sprintf("%d", i),
 			Name:     fmt.Sprintf("Song %d", i),
 			Composer: fmt.Sprintf("Composer %d", i),
@@ -133,7 +133,7 @@ func TestRedisSongRepository_GetByID(t *testing.T) {
 		t.Fatalf("failed to get song by ID: %s", err)
 	}
 
-	expectedSong := models.Song{
+	expectedSong := model.Song{
 		ID:       "1",
 		Name:     "Song 1",
 		Composer: "Composer 1",
@@ -144,7 +144,7 @@ func TestRedisSongRepository_GetByID(t *testing.T) {
 	if err == nil {
 		t.Fatalf("failed to return nil for non-existent song: %s", err)
 	}
-	assert.Equal(t, nonExistentSong, (*models.Song)(nil))
+	assert.Equal(t, nonExistentSong, (*model.Song)(nil))
 }
 
 func TestRedisSongRepository_Create(t *testing.T) {
@@ -156,7 +156,7 @@ func TestRedisSongRepository_Create(t *testing.T) {
 	}
 	defer cleanup()
 
-	song := &models.Song{
+	song := &model.Song{
 		ID:       "4",
 		Name:     "Song 4",
 		Composer: "Composer 4",
@@ -178,7 +178,7 @@ func TestRedisSongRepository_Update(t *testing.T) {
 	}
 	defer cleanup()
 
-	song := &models.Song{
+	song := &model.Song{
 		ID:       "1",
 		Name:     "Updated Song 1",
 		Composer: "Updated Composer 1",
@@ -209,7 +209,7 @@ func TestRedisSongRepository_Delete(t *testing.T) {
 	if err == nil {
 		t.Fatalf("failed to return nil for deleted song: %s", err)
 	}
-	assert.Equal(t, song, (*models.Song)(nil))
+	assert.Equal(t, song, (*model.Song)(nil))
 
 	err = repo.Delete(ctx, "4")
 	if err != nil {

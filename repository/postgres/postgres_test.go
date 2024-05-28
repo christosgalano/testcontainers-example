@@ -15,7 +15,7 @@ import (
 	"github.com/testcontainers/testcontainers-go/wait"
 	"gotest.tools/assert"
 
-	"github.com/christosgalano/testcontainers-demo/models"
+	"github.com/christosgalano/testcontainers-demo/model"
 )
 
 func setupTestPostgresRepository(ctx context.Context) (*PostgresSongRepository, func(), error) {
@@ -86,9 +86,9 @@ func TestPostgresSongRepository_GetAll(t *testing.T) {
 		t.Fatalf("expected 3 songs, got %d", len(songs))
 	}
 
-	expectedSongs := make(map[string]models.Song)
+	expectedSongs := make(map[string]model.Song)
 	for i := 1; i <= len(songs); i++ {
-		expectedSongs[fmt.Sprintf("%d", i)] = models.Song{
+		expectedSongs[fmt.Sprintf("%d", i)] = model.Song{
 			ID:       fmt.Sprintf("%d", i),
 			Name:     fmt.Sprintf("Song %d", i),
 			Composer: fmt.Sprintf("Composer %d", i),
@@ -121,7 +121,7 @@ func TestPostgresSongRepository_GetByID(t *testing.T) {
 		t.Fatalf("failed to get song by ID: %s", err)
 	}
 
-	expectedSong := models.Song{
+	expectedSong := model.Song{
 		ID:       "1",
 		Name:     "Song 1",
 		Composer: "Composer 1",
@@ -132,7 +132,7 @@ func TestPostgresSongRepository_GetByID(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to return nil for non-existent song: %s", err)
 	}
-	assert.Equal(t, nonExistentSong, (*models.Song)(nil))
+	assert.Equal(t, nonExistentSong, (*model.Song)(nil))
 }
 
 func TestPostgresSongRepository_Create(t *testing.T) {
@@ -144,7 +144,7 @@ func TestPostgresSongRepository_Create(t *testing.T) {
 	}
 	defer cleanup()
 
-	song := &models.Song{
+	song := &model.Song{
 		ID:       "4",
 		Name:     "Song 4",
 		Composer: "Composer 4",
@@ -166,7 +166,7 @@ func TestPostgresSongRepository_Update(t *testing.T) {
 	}
 	defer cleanup()
 
-	song := &models.Song{
+	song := &model.Song{
 		ID:       "1",
 		Name:     "Updated Song 1",
 		Composer: "Updated Composer 1",
@@ -197,5 +197,5 @@ func TestPostgresSongRepository_Delete(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to get song by ID: %s", err)
 	}
-	assert.Equal(t, song, (*models.Song)(nil))
+	assert.Equal(t, song, (*model.Song)(nil))
 }

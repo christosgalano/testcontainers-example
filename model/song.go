@@ -1,4 +1,4 @@
-package models
+package model
 
 // Song represents a music song.
 type Song struct {

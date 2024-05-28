@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 
-	"github.com/christosgalano/testcontainers-demo/models"
+	"github.com/christosgalano/testcontainers-demo/model"
 )
 
 // RedisSongRepository is a Redis implementation of SongRepository.
@@ -15,18 +15,18 @@ type RedisSongRepository struct {
 }
 
 // GetAll returns all songs.
-func (r *RedisSongRepository) GetAll(ctx context.Context) ([]models.Song, error) {
+func (r *RedisSongRepository) GetAll(ctx context.Context) ([]model.Song, error) {
 	keys, err := r.client.Keys(ctx, "*").Result()
 	if err != nil {
 		return nil, err
 	}
-	var songs []models.Song
+	var songs []model.Song
 	for _, key := range keys {
 		val, err := r.client.Get(ctx, key).Result()
 		if err != nil {
 			return nil, err
 		}
-		var song models.Song
+		var song model.Song
 		err = json.Unmarshal([]byte(val), &song)
 		if err != nil {
 			return nil, err
@@ -37,12 +37,12 @@ func (r *RedisSongRepository) GetAll(ctx context.Context) ([]models.Song, error)
 }
 
 // GetByID returns a song by ID.
-func (r *RedisSongRepository) GetByID(ctx context.Context, id string) (*models.Song, error) {
+func (r *RedisSongRepository) GetByID(ctx context.Context, id string) (*model.Song, error) {
 	val, err := r.client.Get(ctx, id).Result()
 	if err != nil {
 		return nil, err
 	}
-	var song models.Song
+	var song model.Song
 	err = json.Unmarshal([]byte(val), &song)
 	if err != nil {
 		return nil, err
@@ -51,7 +51,7 @@ func (r *RedisSongRepository) GetByID(ctx context.Context, id string) (*models.S
 }
 
 // Create creates a new song.
-func (r *RedisSongRepository) Create(ctx context.Context, song *models.Song) (*models.Song, error) {
+func (r *RedisSongRepository) Create(ctx context.Context, song *model.Song) (*model.Song, error) {
 	songJSON, err := json.Marshal(song)
 	if err != nil {
 		return nil, err
@@ -64,7 +64,7 @@ func (r *RedisSongRepository) Create(ctx context.Context, song *models.Song) (*m
 }
 
 // Update updates an existing song.
-func (r *RedisSongRepository) Update(ctx context.Context, song *models.Song) (*models.Song, error) {
+func (r *RedisSongRepository) Update(ctx context.Context, song *model.Song) (*model.Song, error) {
 	return r.Create(ctx, song) // In Redis, update can be done using the same method as create
 }
 
