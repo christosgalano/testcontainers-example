@@ -7,7 +7,7 @@ require (
 	github.com/lib/pq v1.10.9
 	github.com/testcontainers/testcontainers-go v0.32.0
 	github.com/testcontainers/testcontainers-go/modules/postgres v0.31.0
-	github.com/testcontainers/testcontainers-go/modules/redis v0.31.0
+	github.com/testcontainers/testcontainers-go/modules/redis v0.32.0
 	gotest.tools v2.2.0+incompatible
 	gotest.tools/v3 v3.5.1
 )
